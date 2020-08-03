@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">news</string>
+    <string name="image">image</string>
+    <string name="splashtext0">최신 뉴스를 제공합니다.</string>
+    <string name="splashtext1">뉴스의 키워드를 알아보세요</string>
+    <string name="splashtext2">뉴스를 클릭하면 원본 뉴스를 볼 수 있습니다.</string>
+    <string name="splashver">v 1.0</string>
+    <string name="news">NEWS</string>
+    <string name="title"> News Title</string>
+    <string name="contents">NewsContents...</string>
+    <string name="keyword">keyword</string>
+    <string name="loading">Loading...</string>
+</resources>

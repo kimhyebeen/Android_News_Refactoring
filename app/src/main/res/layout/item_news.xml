@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/newsItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
+    android:background="#ffffff"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/newsImage"
+        android:layout_width="85sp"
+        android:layout_height="85sp"
+        android:background="@drawable/img_line"
+        android:contentDescription="@string/news"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/icon_news_round" />
+
+    <TextView
+        android:id="@+id/newsTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/title"
+        android:textColor="#3E3E3E"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/newsImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/newsContents"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="@string/contents"
+        android:textColor="#727272"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/newsImage"
+        app:layout_constraintTop_toBottomOf="@+id/newsTitle" />
+
+    <TextView
+        android:id="@+id/keyword1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/keyline"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/keyword"
+        android:textColor="#727272"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/newsImage"
+        app:layout_constraintStart_toEndOf="@+id/newsImage" />
+
+    <TextView
+        android:id="@+id/keyword2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/keyline"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/keyword"
+        android:textColor="#727272"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/newsImage"
+        app:layout_constraintStart_toEndOf="@+id/keyword1" />
+
+    <TextView
+        android:id="@+id/keyword3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/keyline"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/keyword"
+        android:textColor="#727272"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/newsImage"
+        app:layout_constraintStart_toEndOf="@+id/keyword2" />
+</androidx.constraintlayout.widget.ConstraintLayout>
