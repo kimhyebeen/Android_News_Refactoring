@@ -5,15 +5,14 @@
     android:id="@+id/newsItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="2dp"
-    android:background="#ffffff"
+    android:layout_marginBottom="3dp"
+    android:background="@drawable/bg_news_item"
     android:padding="5dp">
 
     <ImageView
         android:id="@+id/newsImage"
         android:layout_width="85sp"
         android:layout_height="85sp"
-        android:background="@drawable/img_line"
         android:contentDescription="@string/news"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +28,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/title"
-        android:textColor="#3E3E3E"
+        android:textColor="#000000"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +45,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:text="@string/contents"
-        android:textColor="#727272"
+        android:textColor="#232323"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/newsImage"
@@ -61,7 +60,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/keyword"
-        android:textColor="#727272"
+        android:textColor="#232323"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/newsImage"
         app:layout_constraintStart_toEndOf="@+id/newsImage" />
@@ -75,7 +74,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/keyword"
-        android:textColor="#727272"
+        android:textColor="#232323"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/newsImage"
         app:layout_constraintStart_toEndOf="@+id/keyword1" />
@@ -89,7 +88,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/keyword"
-        android:textColor="#727272"
+        android:textColor="#232323"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/newsImage"
         app:layout_constraintStart_toEndOf="@+id/keyword2" />

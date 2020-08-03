@@ -38,10 +38,6 @@ class MainActivity : AppCompatActivity() {
         swipeLayout = findViewById(R.id.swipeLayout)
         linearLayoutManager1 = LinearLayoutManager(applicationContext)
 
-        /* actionBar 세팅 */
-        val actionBar = supportActionBar
-        actionBar!!.title = "뉴스 리스트"
-
         /* recyclerView 세팅 */
         recyclerView.layoutManager = linearLayoutManager1
         recyclerView.adapter = listAdapter
@@ -64,16 +60,16 @@ class MainActivity : AppCompatActivity() {
         var newsList: ArrayList<News> = ArrayList()
         val url = "https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko"
 
-        val thisActivity = findViewById<ConstraintLayout>(R.id.mainAct)
+        val thisActivity = findViewById<ConstraintLayout>(R.id.mainConstraint)
         val progressbar = ProgressBar(this@MainActivity)
         var params = ConstraintLayout.LayoutParams(150, 150);
 
         override fun onPreExecute() {
             /* document 다 불러올 때까지 로딩표시 띄우기 */
-            params.topToTop = R.id.mainAct
-            params.bottomToBottom = R.id.mainAct
-            params.leftToLeft = R.id.mainAct
-            params.rightToRight = R.id.mainAct
+            params.topToTop = R.id.mainConstraint
+            params.bottomToBottom = R.id.mainConstraint
+            params.leftToLeft = R.id.mainConstraint
+            params.rightToRight = R.id.mainConstraint
             thisActivity.addView(progressbar, params)
             progressbar.visibility = View.VISIBLE
             super.onPreExecute()
