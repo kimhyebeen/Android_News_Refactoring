@@ -17,7 +17,7 @@ First Android Project with Kotlin
 ## 리팩토링 주요 기능
 1. 기존 비동기 처리(AsyncTask -> CoRoutine)
 2. 변수명 클린하게 바꾸려고 노력중
-3. 객체 지향 언어같은 Kotlin코드를 최대한 함수형 언어같은 코드로 바꾸기
+3. 객체 지향 언어처럼 짜버린 Kotlin코드를 최대한 Kotlin다운 함수형 언어같은 코드로 바꾸기
 4. 중복된 코드 최대한 줄이기
 
 ## 현재 screen
