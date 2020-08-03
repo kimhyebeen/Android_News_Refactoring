@@ -28,8 +28,5 @@ class SplashActivity : AppCompatActivity() {
         val iconImageView = findViewById<ImageView>(R.id.iconImageView)
         iconImageView.background = ShapeDrawable(OvalShape())
         iconImageView.clipToOutline = true
-
-
-
     }
 }

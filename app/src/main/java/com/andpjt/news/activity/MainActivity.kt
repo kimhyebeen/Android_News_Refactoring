@@ -1,80 +1,65 @@
 package com.andpjt.news.activity
 
-import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.andpjt.news.R
-import com.andpjt.news.adapter.ListAdapter
+import com.andpjt.news.adapter.newsRecyclerAdapter
 import com.andpjt.news.items.News
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import java.lang.Exception
 import java.security.cert.X509Certificate
 import java.util.*
 import javax.net.ssl.*
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
 class MainActivity : AppCompatActivity() {
-    val TAG = "MainActivity"
     lateinit var recyclerView: RecyclerView
     lateinit var swipeLayout: SwipeRefreshLayout
-    lateinit var linearLayoutManager1: LinearLayoutManager
-    val listAdapter = ListAdapter()
+    val listAdapter = newsRecyclerAdapter()
+    lateinit var url: String
+    lateinit var getNewsScope: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        url = getString(R.string.url)
         recyclerView = findViewById(R.id.recyclerView)
         swipeLayout = findViewById(R.id.swipeLayout)
-        linearLayoutManager1 = LinearLayoutManager(applicationContext)
 
         /* recyclerView 세팅 */
-        recyclerView.layoutManager = linearLayoutManager1
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = listAdapter
 
         /* RSS를 읽어서 newsList에 저장 */
-        MyAsyncTask().execute()
+        permitSSL()
+
+        getNewsData()
 
         /* 리스트를 당겨서 새로고침 */
         swipeLayout.setOnRefreshListener {
             /* 새로고침 코드 (RSS에서 받아온 내용 저장하고 다시 list에 나타내기..??) */
+            getNewsScope.cancel()
             val num = listAdapter.itemCount-1
             listAdapter.deleteItem()
             for (i in 0..num) listAdapter.notifyItemRemoved(0)
-            MyAsyncTask().execute()
+            getNewsData()
             swipeLayout.isRefreshing = false
         }
     }
 
-    inner class MyAsyncTask: AsyncTask<String, String, ArrayList<News>>() {
-        var newsList: ArrayList<News> = ArrayList()
-        val url = "https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko"
-
-        val thisActivity = findViewById<ConstraintLayout>(R.id.mainConstraint)
-        val progressbar = ProgressBar(this@MainActivity)
-        var params = ConstraintLayout.LayoutParams(150, 150);
-
-        override fun onPreExecute() {
-            /* document 다 불러올 때까지 로딩표시 띄우기 */
-            params.topToTop = R.id.mainConstraint
-            params.bottomToBottom = R.id.mainConstraint
-            params.leftToLeft = R.id.mainConstraint
-            params.rightToRight = R.id.mainConstraint
-            thisActivity.addView(progressbar, params)
-            progressbar.visibility = View.VISIBLE
-            super.onPreExecute()
-        }
-        override fun doInBackground(vararg params: String?): ArrayList<News> {
+    fun getNewsData() {
+        getNewsScope = GlobalScope.launch {
             val doc: Document = Jsoup.connect(url).get()
             val size = doc.select("item").size
             val titles = doc.select("item").select("title")
@@ -84,41 +69,38 @@ class MainActivity : AppCompatActivity() {
             permitSSL()
 
             for (i in 0 until size) {
-                val metadoc: Document = Jsoup.connect(links[i].text().toString()).get()
-                var img = ""
-                var description = ""
-                var keyword1 = "null"
-                var keyword2 = "null"
-                var keyword3 = "null"
-                if (!metadoc.select("meta[property=og:image]").isEmpty()) img = metadoc.select("meta[property=og:image]")[0].attr("content")
-                if (!metadoc.select("meta[property=og:description]").isEmpty()) description = metadoc.select("meta[property=og:description]")[0].attr("content")
-                Log.d(TAG, "i : "+i)
-                /* keyword 분석 (본문이 간혹 없는 경우엔 어떻게 하지?????? -> 없애면 되지) */
-                if (!description.equals("")) {
-                    val words = getKeyword(description)
-                    if (words[0]!=null) keyword1 = words[0].toString()
-                    if (words[1]!=null) keyword2 = words[1].toString()
-                    if (words[2]!=null) keyword3 = words[2].toString()
-//                    Log.d(TAG, "words : "+words[0]+" "+words[1]+" "+words[2])
-                }
-                var mNews = News(titles[i].text(), links[i].text(), img, description, keyword1, keyword2, keyword3)
-                newsList.add(mNews)
-            }
-            return newsList
-        }
+                try {
+                    var news = News(titles[i].text().toString(), links[i].text().toString(), "", "", "null", "null", "null")
+                    Jsoup.connect(links[i].text().toString())
+                        .userAgent("Mozilla")
+                        .header("Accept", "text/html")
+                        .header("Accept-Encoding", "gzip,deflate")
+                        .header("Accept-Language", "it-IT,en;q=0.8,en-US;q=0.6,de;q=0.4,it;q=0.2,es;q=0.2")
+                        .header("Connection", "keep-alive")
+                        .ignoreContentType(true)
+                        .get().let { metadoc ->
+                            if (!metadoc.select("meta[property=og:image]").isEmpty()) news.image = metadoc.select("meta[property=og:image]")[0].attr("content")
+                            if (!metadoc.select("meta[property=og:description]").isEmpty()) news.description = metadoc.select("meta[property=og:description]")[0].attr("content")
+                        }
 
-        override fun onPostExecute(result: ArrayList<News>) {
-            super.onPostExecute(result)
-            if (result.size==0) Toast.makeText(applicationContext, "데이터가 없습니다.", Toast.LENGTH_SHORT).show()
-            else {
-                for (i in 0 until result.size) {
-                    listAdapter.additem(result[i].title, result[i].link, result[i].image, result[i].description, result[i].keyword1, result[i].keyword2, result[i].keyword3)
+                    /* keyword 분석 */
+                    if (!news.description.equals("")) {
+                        val words = getKeyword(news.description)
+                        if (words[0]!=null) news.keyword1 = words[0].toString()
+                        if (words[1]!=null) news.keyword2 = words[1].toString()
+                        if (words[2]!=null) news.keyword3 = words[2].toString()
+                    }
+                    listAdapter.additem(news)
+
+                    launch(Dispatchers.Main) { listAdapter.notifyDataSetChanged() }
+                } catch (e: Exception) {
+                    println("${i}번째에서 오류 발생")
                 }
-                listAdapter.notifyDataSetChanged()
             }
-            progressbar.visibility = View.GONE
+            launch(Dispatchers.Main) { Toast.makeText(applicationContext, "finish", Toast.LENGTH_SHORT).show() }
         }
     }
+
     fun permitSSL() {
         val trustAllCerts =
             arrayOf<TrustManager>(object : X509TrustManager {
@@ -135,9 +117,11 @@ class MainActivity : AppCompatActivity() {
                 ) {
                 }
             })
-        val sc = SSLContext.getInstance("SSL")
-        sc.init(null, trustAllCerts, java.security.SecureRandom())
-        HttpsURLConnection.setDefaultSSLSocketFactory(sc.socketFactory)
+
+        SSLContext.getInstance("SSL").let {
+            it.init(null, trustAllCerts, java.security.SecureRandom())
+            HttpsURLConnection.setDefaultSSLSocketFactory(it.socketFactory)
+        }
         val allHostsValid: HostnameVerifier = object : HostnameVerifier {
             override fun verify(hostname: String?, session: SSLSession?): Boolean { return true }
         }
