@@ -31,6 +31,7 @@ News List Application with RSS parsing.
 
 
 ## 현재 screen
+<image src="./gif_screen.gif" width=260 />
 <image src="./cur-screen.png" width=800 />
 
 ## 리팩토링 하기 전 screen
