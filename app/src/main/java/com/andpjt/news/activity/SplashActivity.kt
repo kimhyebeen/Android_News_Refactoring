@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.andpjt.news.R
 
 class SplashActivity : AppCompatActivity() {
-    val handler = Handler()
+    private val handler = Handler()
 
     override fun onResume() {
         super.onResume()

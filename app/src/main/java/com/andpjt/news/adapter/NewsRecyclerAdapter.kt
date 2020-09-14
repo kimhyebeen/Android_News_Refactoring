@@ -12,8 +12,9 @@ import com.andpjt.news.R
 import com.andpjt.news.activity.NewsActivity
 import com.andpjt.news.items.News
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.item_news.view.*
 
-class newsRecyclerAdapter : RecyclerView.Adapter<newsRecyclerAdapter.ItemViewHolder>() {
+class NewsRecyclerAdapter : RecyclerView.Adapter<NewsRecyclerAdapter.ItemViewHolder>() {
     private var newsItems: ArrayList<News> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -25,43 +26,44 @@ class newsRecyclerAdapter : RecyclerView.Adapter<newsRecyclerAdapter.ItemViewHol
         )
     }
 
-    class ItemViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView!!) {
-        var newsImage = itemView.findViewById<ImageView>(R.id.newsImage)
-        var newsTitle = itemView.findViewById<TextView>(R.id.newsTitle)
-        var newsContents = itemView.findViewById<TextView>(R.id.newsContents)
-        var keyword1 = itemView.findViewById<TextView>(R.id.keyword1)
-        var keyword2 = itemView.findViewById<TextView>(R.id.keyword2)
-        var keyword3 = itemView.findViewById<TextView>(R.id.keyword3)
-        val context = context
+    class ItemViewHolder(itemView: View, private val context: Context) : RecyclerView.ViewHolder(itemView!!) {
+        private val newsImage: ImageView = itemView.newsImage
+        private val newsTitle: TextView = itemView.newsTitle
+        private val newsContents: TextView = itemView.newsContents
+        private val keyword1: TextView = itemView.keyword1
+        private val keyword2: TextView = itemView.keyword2
+        private val keyword3: TextView = itemView.keyword3
 
         fun onBind(item: News) {
             newsTitle.text = item.title
             /* 피카소 라이브러리 이용해서 newsImage에 url 이미지 붙이기 */
-            if (!item.image.equals("")) Picasso.with(context).load(item.image).into(newsImage)
+            if (item.image != "") Picasso.with(context).load(item.image).into(newsImage)
             newsContents.text = item.description
-            if (!item.keyword1.equals("null")) {
+
+            if (item.keyword1 != "null") {
                 keyword1.visibility = View.VISIBLE
                 keyword1.text = item.keyword1
             } else keyword1.visibility = View.GONE
-            if (!item.keyword2.equals("null")) {
+            if (item.keyword2 != "null") {
                 keyword2.visibility = View.VISIBLE
                 keyword2.text = item.keyword2
             } else keyword2.visibility = View.GONE
-            if (!item.keyword3.equals("null")) {
+            if (item.keyword3 != "null") {
                 keyword3.visibility = View.VISIBLE
                 keyword3.text = item.keyword3
             } else keyword3.visibility = View.GONE
 
             /* item 누르면 NewsActivity로 이동 */
-            itemView.setOnClickListener { v ->
-                var intent = Intent(context, NewsActivity::class.java)
-                /*기 뉴스 제목, 키워드, 원문 링크 putExtra */
-                intent.putExtra("title", item.title)
-                intent.putExtra("link", item.link)
-                intent.putExtra("key1", item.keyword1)
-                intent.putExtra("key2", item.keyword2)
-                intent.putExtra("key3", item.keyword3)
-                context.startActivity(intent)
+            itemView.setOnClickListener {
+                Intent(context, NewsActivity::class.java).apply {
+                    /* 뉴스 제목, 키워드, 원문 링크 putExtra */
+                    putExtra("title", item.title)
+                    putExtra("link", item.link)
+                    putExtra("key1", item.keyword1)
+                    putExtra("key2", item.keyword2)
+                    putExtra("key3", item.keyword3)
+                    context.startActivity(this)
+                }
             }
         }
     }
@@ -74,7 +76,7 @@ class newsRecyclerAdapter : RecyclerView.Adapter<newsRecyclerAdapter.ItemViewHol
         holder.onBind(newsItems.get(position))
     }
 
-    fun additem(news: News) {
+    fun addItem(news: News) {
         newsItems.add(news)
     }
 

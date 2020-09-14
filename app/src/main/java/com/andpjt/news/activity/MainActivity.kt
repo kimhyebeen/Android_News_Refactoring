@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.andpjt.news.R
-import com.andpjt.news.adapter.newsRecyclerAdapter
+import com.andpjt.news.adapter.NewsRecyclerAdapter
 import com.andpjt.news.items.News
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -23,10 +23,10 @@ import kotlin.collections.HashMap
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit var recyclerView: RecyclerView
-    lateinit var swipeLayout: SwipeRefreshLayout
-    val listAdapter = newsRecyclerAdapter()
-    lateinit var url: String
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var swipeLayout: SwipeRefreshLayout
+    private val listAdapter = NewsRecyclerAdapter()
+    private lateinit var url: String
     lateinit var getNewsScope: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getNewsData() {
+    private fun getNewsData() {
         getNewsScope = GlobalScope.launch {
             val doc: Document = Jsoup.connect(url).get()
             val size = doc.select("item").size
@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
             for (i in 0 until size) {
                 try {
                     var news = News(titles[i].text().toString(), links[i].text().toString(), "", "", "null", "null", "null")
+
                     Jsoup.connect(links[i].text().toString())
                         .userAgent("Mozilla")
                         .header("Accept", "text/html")
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                         if (words[1]!=null) news.keyword2 = words[1].toString()
                         if (words[2]!=null) news.keyword3 = words[2].toString()
                     }
-                    listAdapter.additem(news)
+                    listAdapter.addItem(news)
 
                     launch(Dispatchers.Main) { listAdapter.notifyDataSetChanged() }
                 } catch (e: Exception) {
@@ -101,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun permitSSL() {
+    private fun permitSSL() {
         val trustAllCerts =
             arrayOf<TrustManager>(object : X509TrustManager {
                 override fun getAcceptedIssuers(): Array<X509Certificate?>? { return null }
@@ -122,38 +123,32 @@ class MainActivity : AppCompatActivity() {
             it.init(null, trustAllCerts, java.security.SecureRandom())
             HttpsURLConnection.setDefaultSSLSocketFactory(it.socketFactory)
         }
-        val allHostsValid: HostnameVerifier = object : HostnameVerifier {
-            override fun verify(hostname: String?, session: SSLSession?): Boolean { return true }
+        HostnameVerifier { _, _ -> true }.let {
+            HttpsURLConnection.setDefaultHostnameVerifier(it)
         }
-        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid)
     }
 
-    fun getKeyword(desc: String): Array<String?> {
+    private fun getKeyword(desc: String): Array<String?> {
         var keyword = arrayOfNulls<String>(3)
         val des = desc.split(" ")
         var map = HashMap<String, Int>()
         for (word in des) {
             if (map.containsKey(word)) {
-                val n = map.get(word)
+                val n = map[word]
                 map.remove(word)
-                map.put(word, n!!+1)
+                map[word] = n!!+1
             }
-            else if (word.length >= 2) map.put(word, 1)
+            else if (word.length >= 2) map[word] = 1
         }
 
         val list: List<Map.Entry<String, Int>> =
             LinkedList(map.entries)
         Collections.sort(
-            list,
-            object : Comparator<Map.Entry<String?, Int?>?> {
-                override fun compare(
-                    o1: Map.Entry<String?, Int?>?,
-                    o2: Map.Entry<String?, Int?>?
-                ): Int {
-                    val comparision = (o1!!.value!! - o2!!.value!!) * -1
-                    return if (comparision == 0) o1.key!!.compareTo(o2.key!!) else comparision
-                }
-            })
+            list
+        ) { o1, o2 ->
+            val comparision = (o1!!.value - o2!!.value) * -1
+            if (comparision == 0) o1.key.compareTo(o2.key) else comparision
+        }
         var num = 0
         for ((key) in list) {
             keyword[num++] = key

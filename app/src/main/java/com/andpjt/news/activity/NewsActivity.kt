@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_news.*
 
 
 class NewsActivity : AppCompatActivity() {
-    val keyArray = arrayOf("key1", "key2", "key3")
+    private val keyArray = arrayOf("key1", "key2", "key3")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +27,7 @@ class NewsActivity : AppCompatActivity() {
         titleText.text = intent.getStringExtra("title")
 
         for (i in 0..2) {
-            if (!intent.getStringExtra(keyArray[i]).equals("null")) {
+            if (intent.getStringExtra(keyArray[i]) != "null") {
                 TextView(applicationContext).apply {
                     setPadding(30, 0, 30, 0)
                     background = getDrawable(R.drawable.keyline)
