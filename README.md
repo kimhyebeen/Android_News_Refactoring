@@ -1,3 +1,8 @@
+![language](https://img.shields.io/badge/language-Kotlin-9cf)
+![비동기처리](https://img.shields.io/badge/%EB%B9%84%EB%8F%99%EA%B8%B0%EC%B2%98%EB%A6%AC-CoRoutine-6054d1)
+![network](https://img.shields.io/badge/network-Jsoup-yellow)
+![image](https://img.shields.io/badge/image-Picasso-edfcd2)
+
 # Android_News_Refactoring
 First Android Project with Kotlin.
 
