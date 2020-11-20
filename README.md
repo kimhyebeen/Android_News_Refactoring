@@ -12,7 +12,7 @@ News List Application with RSS parsing.
 ## History
 * ver 1.0 - 2020.03.20 ~ 2020.03.31
 * ver 2.0 - 2020.08
-* ver 2.1 - 2020.11 (UI 수정)
+* ver 2.1 - 2020.11 (UI 수정 및 SharedElementsTransition 적용)
 
 ## Basic Information
 2020년 3월, 안드로이드 챌린지로 참여했던 뉴스 목록 애플리케이션 + **리팩토링**
@@ -36,7 +36,7 @@ News List Application with RSS parsing.
 4. 중복된 코드 최대한 줄이기
 
 ## ver 2.1 screen
-<image src="./images/ver2_screen_1.gif" width=260>
+<image src="./images/ver2_gif_1.gif" width=260>
 
 ## ver 2.0 screen
 <image src="./images/ver2_screen_0.png" width=700 />

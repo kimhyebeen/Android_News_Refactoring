@@ -8,6 +8,7 @@ import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import com.andpjt.news.R
 import kotlinx.android.synthetic.main.activity_news.*
 
@@ -18,6 +19,8 @@ class NewsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news)
+
+        ViewCompat.setTransitionName(titleText, "title")
 
         var params = LinearLayout
             .LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -34,6 +37,9 @@ class NewsActivity : AppCompatActivity() {
                     layoutParams = params
                     setTextColor(Color.parseColor("#FFFFFF"))
                     text = intent.getStringExtra(keyArray[i])
+
+                    ViewCompat.setTransitionName(this, "key$i")
+
                     keyLinear.addView(this)
                 }
             }

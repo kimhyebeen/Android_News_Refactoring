@@ -1,6 +1,7 @@
 package com.andpjt.news.activity
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,6 +33,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        window.run {
+            sharedElementEnterTransition = TransitionInflater.from(context).inflateTransition(R.transition.custom_transition)
+            sharedElementExitTransition = TransitionInflater.from(context).inflateTransition(R.transition.custom_transition)
+        }
 
         url = getString(R.string.url)
         recyclerView = findViewById(R.id.recyclerView)
