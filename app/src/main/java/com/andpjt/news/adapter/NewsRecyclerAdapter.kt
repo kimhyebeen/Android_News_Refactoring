@@ -1,5 +1,6 @@
 package com.andpjt.news.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -7,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
 import com.andpjt.news.R
 import com.andpjt.news.activity.NewsActivity
@@ -55,16 +59,26 @@ class NewsRecyclerAdapter : RecyclerView.Adapter<NewsRecyclerAdapter.ItemViewHol
 
             /* item 누르면 NewsActivity로 이동 */
             itemView.setOnClickListener {
-                Intent(context, NewsActivity::class.java).apply {
-                    /* 뉴스 제목, 키워드, 원문 링크 putExtra */
-                    putExtra("title", item.title)
-                    putExtra("link", item.link)
-                    putExtra("key1", item.keyword1)
-                    putExtra("key2", item.keyword2)
-                    putExtra("key3", item.keyword3)
-                    context.startActivity(this)
-                }
+                startNewsActivity(item)
             }
+        }
+
+        private fun startNewsActivity(item: News) {
+            val intent = Intent(context, NewsActivity::class.java)
+            intent.apply {
+                putExtra("title", item.title)
+                putExtra("link", item.link)
+                putExtra("key1", item.keyword1)
+                putExtra("key2", item.keyword2)
+                putExtra("key3", item.keyword3)
+            }
+            val titlePair: Pair<View, String> = Pair(newsTitle, "title")
+            val keyPair1: Pair<View, String> = Pair(keyword1, "key0")
+            val keyPair2: Pair<View, String> = Pair(keyword2, "key1")
+            val keyPair3: Pair<View, String> = Pair(keyword3, "key2")
+
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, titlePair, keyPair1, keyPair2, keyPair3)
+            ActivityCompat.startActivity(context, intent, options.toBundle())
         }
     }
 
